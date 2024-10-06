@@ -9,7 +9,7 @@ export class UserController {
   @Get('/user')
   async getUser(): Promise<User | null> {
     return this.userService.user({
-      clerkId: 'clerk-id',
+      kindeId: 'clerk-id',
     });
   }
 }

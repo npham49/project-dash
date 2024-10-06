@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import configuration from './config/configuration';
 import { AppLoggerMiddleware } from './middleware/logger';
+import { WebhookModule } from './webhook/webhook.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,6 +27,7 @@ import { AppLoggerMiddleware } from './middleware/logger';
       },
     }),
     ProjectModule,
+    WebhookModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -20,7 +20,7 @@ export class ProjectService {
     cursor?: Prisma.ProjectWhereUniqueInput;
     where?: Prisma.ProjectWhereInput;
     orderBy?: Prisma.ProjectOrderByWithRelationInput;
-    clerkId: string;
+    kindeId: string;
   }): Promise<Project[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.project.findMany({
@@ -30,7 +30,7 @@ export class ProjectService {
       where: {
         ...where,
         user: {
-          clerkId: params.clerkId,
+          kindeId: params.kindeId,
         },
       },
       orderBy,

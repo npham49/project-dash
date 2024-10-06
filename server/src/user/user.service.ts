@@ -14,9 +14,9 @@ export class UserService {
     });
   }
 
-  async userByClerkId(clerkId: string): Promise<User | null> {
+  async userByKindeId(kindeId: string): Promise<User | null> {
     return this.prisma.user.findUnique({
-      where: { clerkId },
+      where: { kindeId },
     });
   }
 

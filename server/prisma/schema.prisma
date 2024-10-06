@@ -14,11 +14,14 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  clerkId  String    @unique
-  email    String    @unique
-  name     String?
-  projects Project[]
+  id        String    @id @default(cuid())
+  kindeId   String    @unique
+  email     String    @unique
+  tier      String    @default("free")
+  firstName String?
+  lastName  String?
+  username  String?
+  projects  Project[]
 }
 
 model Project {

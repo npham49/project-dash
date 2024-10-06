@@ -17,7 +17,7 @@ export class ProjectController {
   @Get('/projects')
   async getProjects(): Promise<Project[] | null> {
     return this.projectService.projects({
-      clerkId: 'clerk-id',
+      kindeId: 'clerk-id',
     });
   }
 
