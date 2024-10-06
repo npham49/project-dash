@@ -10,6 +10,7 @@ import {
 import { Column } from "@/typings/project";
 import AddDialog from "./add-dialog";
 import { TaskCard } from "./task-card";
+import { useUserStore } from "@/store/user-store-provider";
 
 // Initial state for the Kanban board
 const initialColumns: { [key: string]: Column } = {
@@ -127,6 +128,7 @@ const initialColumns: { [key: string]: Column } = {
 
 export default function KanbanBoard() {
   const [columns, setColumns] = useState(initialColumns);
+  const user = useUserStore((state) => state.user);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -158,7 +160,9 @@ export default function KanbanBoard() {
   return (
     <div className="h-screen w-screen flex flex-col">
       <div className="flex justify-between items-center p-4 z-10">
-        <h1 className="text-2xl font-bold">Let's ideate 💡</h1>
+        <h1 className="text-2xl font-bold">
+          {user.firstName}, let's ideate 💡
+        </h1>
         <AddDialog />
       </div>
       <DragDropContext onDragEnd={onDragEnd}>

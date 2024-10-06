@@ -6,9 +6,11 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { Prisma, Project } from '@prisma/client';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller()
 export class ProjectController {
@@ -21,6 +23,7 @@ export class ProjectController {
     });
   }
 
+  @UseGuards(AuthGuard)
   @Post('/project')
   async createProject(
     @Body() data: Prisma.ProjectCreateInput,

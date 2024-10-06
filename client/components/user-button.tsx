@@ -11,8 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useUserStore } from "../store/user-store-provider";
 
 export function UserButton() {
+  const clearUser = useUserStore((state) => state.clearUser);
   const { user } = useKindeBrowserClient();
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -24,19 +26,21 @@ export function UserButton() {
             {imageLoading && (
               <Skeleton className="w-8 h-8 rounded-full absolute" />
             )}
-            <Image
-              src={user?.picture || ""}
-              alt="User"
-              width={32}
-              height={32}
-              className={`rounded-full ${imageLoading ? "invisible" : ""}`}
-              onLoad={() => setImageLoading(false)}
-              onError={() => setImageLoading(false)}
-            />
+            {user?.picture && (
+              <Image
+                src={user?.picture || "/placeholder.png"}
+                alt="User"
+                width={32}
+                height={32}
+                className={`rounded-full ${imageLoading ? "invisible" : ""}`}
+                onLoad={() => setImageLoading(false)}
+                onError={() => setImageLoading(false)}
+              />
+            )}
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <LogoutLink>
+          <LogoutLink onClick={() => void clearUser()}>
             <DropdownMenuItem className="cursor-pointer">
               Logout
             </DropdownMenuItem>

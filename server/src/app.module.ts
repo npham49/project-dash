@@ -7,7 +7,8 @@ import { PrismaModule, loggingMiddleware } from 'nestjs-prisma';
 import configuration from './config/configuration';
 import { AppLoggerMiddleware } from './middleware/logger';
 import { WebhookModule } from './webhook/webhook.module';
-
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,7 +19,6 @@ import { WebhookModule } from './webhook/webhook.module';
       isGlobal: true,
       prismaServiceOptions: {
         middlewares: [
-          // configure your prisma middleware
           loggingMiddleware({
             logger: new Logger('PrismaMiddleware'),
             logLevel: 'log',
@@ -28,6 +28,8 @@ import { WebhookModule } from './webhook/webhook.module';
     }),
     ProjectModule,
     WebhookModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
