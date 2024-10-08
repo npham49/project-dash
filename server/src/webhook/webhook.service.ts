@@ -49,7 +49,7 @@ export class WebhookService {
             return newUser;
           } else {
             const updatedUser = await this.userService.updateUser({
-              where: { id: currentUser.id },
+              where: { kindeId: currentUser.kindeId },
               data: {
                 email: event.data.user.email,
                 firstName: event.data.user.first_name,

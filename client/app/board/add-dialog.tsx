@@ -17,12 +17,12 @@ import { Task } from "@/typings/project";
 import { useState } from "react";
 import { ModeToggle } from "@/components/theme-switcher";
 import { UserButton } from "@/components/user-button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function AddDialog() {
   const [newTask, setNewTask] = useState<Partial<Task>>({
     title: "",
     description: "",
-    createdDate: "",
     interest: "medium",
     labels: [],
   });
@@ -69,19 +69,37 @@ export default function AddDialog() {
                 className="col-span-3"
               />
             </div>
+            {/* radio to select interest */}
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="createdDate" className="text-right">
-                Due Date
+              <Label htmlFor="interest" className="text-right">
+                Interest
               </Label>
-              <Input
-                id="createdDate"
-                type="date"
-                value={newTask.createdDate}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, createdDate: e.target.value })
-                }
+              <RadioGroup
+                // column to take up 3 space
                 className="col-span-3"
-              />
+                id="interest"
+                value={newTask.interest}
+                defaultValue={newTask.interest}
+                onValueChange={(e) =>
+                  setNewTask({
+                    ...newTask,
+                    interest: e as "low" | "medium" | "high",
+                  })
+                }
+              >
+                <div className="flex items-center space-x-2 cursor-pointer">
+                  <RadioGroupItem value="low" id="low" />
+                  <Label htmlFor="low">Low 🤨</Label>
+                </div>
+                <div className="flex items-center space-x-2 cursor-pointer">
+                  <RadioGroupItem value="medium" id="medium" />
+                  <Label htmlFor="medium">Medium 💛</Label>
+                </div>
+                <div className="flex items-center space-x-2 cursor-pointer">
+                  <RadioGroupItem value="high" id="high" />
+                  <Label htmlFor="high">High ❤️‍🔥</Label>
+                </div>
+              </RadioGroup>
             </div>
           </div>
           <Button type="submit">Add Task</Button>

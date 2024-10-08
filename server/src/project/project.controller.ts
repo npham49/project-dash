@@ -6,8 +6,10 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { ProjectService } from './project.service';
 import { Prisma, Project } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -27,8 +29,17 @@ export class ProjectController {
   @Post('/project')
   async createProject(
     @Body() data: Prisma.ProjectCreateInput,
+    @Res() res: Response,
   ): Promise<Project> {
-    return this.projectService.createProject(data);
+    const kindeId = res['locals'].decodedData.sub;
+    return this.projectService.createProject({
+      ...data,
+      user: {
+        connect: {
+          kindeId,
+        },
+      },
+    });
   }
 
   @Put('/project/:id')

@@ -26,18 +26,14 @@ export default function Page() {
 
   useEffect(() => {
     if (userData && userData.data) {
-      setUser(
-        userData.data.id,
-        userData.data.firstName,
-        userData.data.lastName
-      );
+      setUser(userData.data.firstName, userData.data.lastName);
     }
     setLoading(false);
   }, [userData]);
 
   return (
     <div>
-      <TestUserStore />
+      {/* <TestUserStore /> */}
       {loading ? (
         <div>
           <Skeleton />
