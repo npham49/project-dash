@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
-import { Task } from "@/typings/project";
+import { Project } from "@/typings/project";
+import { Option } from "@/components/ui/multiple-selector";
 
 interface TaskCardProps {
-  task: Task;
+  project: Project;
   provided: any;
 }
 
@@ -30,7 +31,7 @@ function getInterestColor(interest: string) {
   }
 }
 
-export function TaskCard({ task, provided }: TaskCardProps) {
+export function TaskCard({ project, provided }: TaskCardProps) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -46,15 +47,15 @@ export function TaskCard({ task, provided }: TaskCardProps) {
     >
       <CardHeader className="p-3 pb-0">
         <CardTitle className="text-base font-semibold hover:underline cursor-pointer">
-          {task.title}
+          {project.title}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-3 pt-1">
-        <p className="text-sm text-gray-500 mb-2">{task.description}</p>
+        <p className="text-sm text-gray-500 mb-2">{project.description}</p>
         <div className="flex flex-wrap gap-1 mb-2">
-          {task.labels.map((label) => (
-            <Badge key={label} variant="secondary" className="text-xs">
-              {label}
+          {project.labels.map((label: Option) => (
+            <Badge key={label.value} variant="secondary" className="text-xs">
+              {label.label}
             </Badge>
           ))}
         </div>
@@ -62,10 +63,10 @@ export function TaskCard({ task, provided }: TaskCardProps) {
       <CardFooter className="p-3 pt-0 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           {isClient && <Clock className="w-4 h-4 text-gray-400" />}
-          <span className="text-xs text-gray-500">{task.createdDate}</span>
+          <span className="text-xs text-gray-500">{project.createdDate}</span>
         </div>
         <div className="text-lg w-5 h-5 rounded-full">
-          {getInterestColor(task.interest)}
+          {getInterestColor(project.interest)}
         </div>
       </CardFooter>
     </Card>

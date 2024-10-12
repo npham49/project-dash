@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
+  Logger,
   Param,
   Post,
   Put,
@@ -18,11 +20,15 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
+  @UseGuards(AuthGuard)
   @Get('/projects')
-  async getProjects(): Promise<Project[] | null> {
-    return this.projectService.projects({
-      kindeId: 'clerk-id',
+  async getProjects(@Res() res: Response) {
+    const kindeId = res['locals'].decodedData.sub;
+    const projects = await this.projectService.projects({
+      kindeId,
     });
+
+    res.status(HttpStatus.OK).json({ status: 'success', data: projects });
   }
 
   @UseGuards(AuthGuard)
@@ -30,9 +36,9 @@ export class ProjectController {
   async createProject(
     @Body() data: Prisma.ProjectCreateInput,
     @Res() res: Response,
-  ): Promise<Project> {
+  ) {
     const kindeId = res['locals'].decodedData.sub;
-    return this.projectService.createProject({
+    const project = await this.projectService.createProject({
       ...data,
       user: {
         connect: {
@@ -40,21 +46,35 @@ export class ProjectController {
         },
       },
     });
+
+    res.status(HttpStatus.OK).json({ status: 'success', data: project });
   }
 
+  @UseGuards(AuthGuard)
   @Put('/project/:id')
   async updateProject(
     @Param('id') id: string,
     @Body() data: Prisma.ProjectUpdateInput,
-  ): Promise<Project> {
-    return this.projectService.updateProject({
-      where: { id },
+    @Res() res: Response,
+  ) {
+    const kindeId = res['locals'].decodedData.sub;
+    const project = await this.projectService.updateProject({
+      where: { id, user: { kindeId } },
       data,
     });
+
+    res.status(HttpStatus.OK).json({ status: 'success', data: project });
   }
 
+  @UseGuards(AuthGuard)
   @Delete('/project/:id')
-  async deleteProject(@Param('id') id: string): Promise<Project> {
-    return this.projectService.deleteProject({ id });
+  async deleteProject(@Param('id') id: string, @Res() res: Response) {
+    const kindeId = res['locals'].decodedData.sub;
+    const project = await this.projectService.deleteProject({
+      id,
+      user: { kindeId },
+    });
+
+    res.status(HttpStatus.OK).json({ status: 'success', data: project });
   }
 }

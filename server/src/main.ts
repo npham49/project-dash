@@ -1,22 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: true,
-  });
-
-  app.setGlobalPrefix('api');
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: '*',
-    methods: ['GET', 'POST'],
+    origin: 'http://localhost:3000', // or your client's origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
-
-  const configService = app.get(ConfigService);
-  const port = configService.get('port');
-
-  await app.listen(port);
+  app.setGlobalPrefix('api'); // Add this line to set the global prefix
+  await app.listen(8080);
 }
 bootstrap();

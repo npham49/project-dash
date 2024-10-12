@@ -5,7 +5,6 @@ import Board from "./board";
 import { useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user-store-provider";
 import { useEffect, useState } from "react";
-import TestUserStore from "./test-user-store";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Page() {
@@ -24,22 +23,33 @@ export default function Page() {
     },
   });
 
+  const { data: projectsData } = useQuery({
+    queryKey: ["projects"],
+    queryFn: () => {
+      const token = getAccessTokenRaw();
+      if (!token) {
+        throw new Error("Access token is null");
+      }
+      return apiService.getProjects(token);
+    },
+  });
+
   useEffect(() => {
-    if (userData && userData.data) {
+    if (userData && userData.data && projectsData && projectsData.data) {
       setUser(userData.data.firstName, userData.data.lastName);
+      setLoading(false);
     }
-    setLoading(false);
-  }, [userData]);
+  }, [userData, projectsData]);
 
   return (
     <div>
       {/* <TestUserStore /> */}
       {loading ? (
         <div>
-          <Skeleton />
+          <Skeleton className="w-full h-[500px]" />
         </div>
       ) : (
-        <Board />
+        <Board projects={projectsData?.data} />
       )}
     </div>
   );

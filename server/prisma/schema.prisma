@@ -30,9 +30,11 @@ model Project {
   title       String
   description String
   userKindeId String
-  labels      String?
+  labels      Json?
+  columnIndex Int      @default(0)
+  status      String   @default("idea")
   createdDate DateTime @default(now())
-  interest    Interest @default(LOW)
+  interest    Interest @default(medium)
   note        Note?
   user        User     @relation(fields: [userKindeId], references: [kindeId])
 }
@@ -47,8 +49,16 @@ model Note {
   projectId   String   @unique
 }
 
+enum Status {
+  idea
+  brainstorm
+  building
+  launched
+  afterLaunch
+}
+
 enum Interest {
-  LOW
-  MEDIUM
-  HIGH
+  low
+  medium
+  high
 }
