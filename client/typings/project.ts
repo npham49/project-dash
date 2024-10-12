@@ -7,8 +7,10 @@ export interface Project {
   title: string;
   description: string;
   createdDate: string;
+  status: "idea" | "brainstorm" | "building" | "launched" | "afterLaunch";
   interest: "low" | "medium" | "high";
   labels: Option[];
+  columnIndex: number;
 }
 
 // Define the structure of a column
@@ -21,6 +23,10 @@ export interface Column {
 export const projectSchema = z.object({
   title: z.string().min(2).max(50),
   description: z.string().min(2).max(500),
-  interest: z.enum(["low", "medium", "high"]),
+  interest: z.enum(["low", "medium", "high"]).default("medium"),
+  status: z
+    .enum(["idea", "brainstorm", "building", "launched", "afterLaunch"])
+    .default("idea"),
   labels: z.array(z.object({ label: z.string(), value: z.string() })),
+  columnIndex: z.number().default(0),
 });

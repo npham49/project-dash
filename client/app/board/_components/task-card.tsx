@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { Project } from "@/typings/project";
 import { Option } from "@/components/ui/multiple-selector";
+import EditNotesDialog from "./edit-notes-dialog";
 
 interface TaskCardProps {
   project: Project;
@@ -51,6 +52,7 @@ export function TaskCard({ project, provided }: TaskCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-3 pt-1">
+        <EditNotesDialog />
         <p className="text-sm text-gray-500 mb-2">{project.description}</p>
         <div className="flex flex-wrap gap-1 mb-2">
           {project.labels.map((label: Option) => (

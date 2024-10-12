@@ -62,6 +62,7 @@ export const updateProject = async (
   });
   return response.json();
 };
+
 export const getUser = async (token: string) => {
   const response = await fetch(`${apiUrl}/user`, {
     headers: {
@@ -69,4 +70,34 @@ export const getUser = async (token: string) => {
     },
   });
   return response.json();
+};
+
+export const updateProjects = async (
+  projects: Partial<Project>[],
+  token: string
+): Promise<Project[]> => {
+  try {
+    const response = await fetch(`${apiUrl}/projects/batch`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projects),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${
+          errorData.message || "Unknown error"
+        }`
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating projects:", error);
+    throw error;
+  }
 };

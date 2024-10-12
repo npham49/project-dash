@@ -62,4 +62,28 @@ export class ProjectService {
       where,
     });
   }
+
+  async updateProjectsBatch(
+    projects: Partial<Project>[],
+    kindeId: string,
+  ): Promise<Project[]> {
+    const updatedProjects = await this.prisma.$transaction(
+      projects.map((project) =>
+        this.prisma.project.update({
+          where: {
+            id: project.id,
+            user: {
+              kindeId,
+            },
+          },
+          data: {
+            status: project.status,
+            columnIndex: project.columnIndex,
+          },
+        }),
+      ),
+    );
+
+    return updatedProjects;
+  }
 }

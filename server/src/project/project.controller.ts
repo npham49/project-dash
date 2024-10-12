@@ -77,4 +77,21 @@ export class ProjectController {
 
     res.status(HttpStatus.OK).json({ status: 'success', data: project });
   }
+
+  @UseGuards(AuthGuard)
+  @Put('/projects/batch')
+  async updateProjectsBatch(
+    @Body() projects: Partial<Project>[],
+    @Res() res: Response,
+  ) {
+    const kindeId = res['locals'].decodedData.sub;
+    const updatedProjects = await this.projectService.updateProjectsBatch(
+      projects,
+      kindeId,
+    );
+
+    res
+      .status(HttpStatus.OK)
+      .json({ status: 'success', data: updatedProjects });
+  }
 }

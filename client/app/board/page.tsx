@@ -1,11 +1,12 @@
 "use client";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import * as apiService from "@/service/api-service";
-import Board from "./board";
+import Board from "./_components/board";
 import { useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user-store-provider";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import BoardSkeleton from "./_components/skeleton";
 
 export default function Page() {
   const setUser = useUserStore((state) => state.setUser);
@@ -44,13 +45,7 @@ export default function Page() {
   return (
     <div>
       {/* <TestUserStore /> */}
-      {loading ? (
-        <div>
-          <Skeleton className="w-full h-[500px]" />
-        </div>
-      ) : (
-        <Board projects={projectsData?.data} />
-      )}
+      {loading ? <BoardSkeleton /> : <Board projects={projectsData?.data} />}
     </div>
   );
 }
