@@ -17,6 +17,7 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "@/hooks/use-toast";
 import debounce from "lodash/debounce";
 import Image from "next/image";
+import Link from "next/link";
 export default function KanbanBoard({ projects }: { projects: Project[] }) {
   // Initial state for the Kanban board
   const initialColumns: { [key: string]: Column } = {
@@ -70,6 +71,7 @@ export default function KanbanBoard({ projects }: { projects: Project[] }) {
   const mutation = useMutation({
     mutationFn: async (updatedProjects: Partial<Project>[]) => {
       const token = getAccessTokenRaw();
+      console.log("token", token);
       if (!token) {
         throw new Error("Access token is null");
       }
@@ -120,15 +122,27 @@ export default function KanbanBoard({ projects }: { projects: Project[] }) {
     const destColumn = newColumns[destination.droppableId];
     destColumn.projects.splice(destination.index, 0, movedTask);
 
-    // Update the project's status and columnIndex
+    // Update the moved project's status and columnIndex
     const updatedProject: Partial<Project> = {
       id: movedTask.id,
       status: destination.droppableId as Project["status"],
       columnIndex: destination.index,
     };
 
+    // Update columnIndex for all affected projects in the destination column
+    const updatedProjects: Partial<Project>[] = destColumn.projects.map(
+      (project, index) => ({
+        id: project.id,
+        columnIndex: index,
+      })
+    );
+
     setColumns(newColumns);
-    setChanges((prevChanges) => [...prevChanges, updatedProject]);
+    setChanges((prevChanges) => [
+      ...prevChanges,
+      updatedProject,
+      ...updatedProjects.filter((p) => p.id !== updatedProject.id),
+    ]);
   };
 
   useEffect(() => {
@@ -143,11 +157,18 @@ export default function KanbanBoard({ projects }: { projects: Project[] }) {
   }, [projects]);
 
   return (
-    <div className="h-screen w-full flex flex-col">
-      <div className="flex justify-between items-center p-4 z-10">
+    <div className="h-screen w-full flex flex-col overflow-x-auto">
+      <header className="flex justify-between items-center p-4 z-10 sticky top-0 left-0 right-0 bg-background">
         <div className="flex items-center space-x-2">
-          <Image src="/icon.png" alt="TaskFlow Logo" width={40} height={40} />
-          <h1 className="text-2xl font-bold">
+          <Link href="/">
+            <Image
+              src="/icon.png"
+              alt="Ideation Pipe Photo"
+              width={40}
+              height={40}
+            />
+          </Link>
+          <h1 className="hidden md:block text-2xl font-bold">
             {user.firstName}, let's ideate 💡
           </h1>
         </div>
@@ -156,17 +177,17 @@ export default function KanbanBoard({ projects }: { projects: Project[] }) {
           loading={mutation.isPending}
           outOfSync={changes.length > 0}
         />
-      </div>
+      </header>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex-1">
-          <div className="flex h-full">
+        <div className="flex-1 overflow-x-auto">
+          <div className="flex min-w-max">
             {Object.values(columns).map((column) => (
               <Droppable droppableId={column.id} key={column.id}>
                 {(provided) => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="bg-muted/90 p-2 rounded-lg mx-1 h-auto min-w-[280px] w-full"
+                    className="bg-muted/90 p-2 rounded-lg mx-1 min-w-[280px] w-full"
                   >
                     <h2 className="font-semibold p-4">{column.title}</h2>
                     <div className="h-[calc(100%-60px)]">
@@ -177,7 +198,11 @@ export default function KanbanBoard({ projects }: { projects: Project[] }) {
                           index={index}
                         >
                           {(provided) => (
-                            <TaskCard project={project} provided={provided} />
+                            <TaskCard
+                              project={project}
+                              provided={provided}
+                              columns={columns}
+                            />
                           )}
                         </Draggable>
                       ))}

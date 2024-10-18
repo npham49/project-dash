@@ -9,6 +9,7 @@ import { AppLoggerMiddleware } from './middleware/logger';
 import { WebhookModule } from './webhook/webhook.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { NoteModule } from './note/note.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
       },
     }),
     ProjectModule,
+    NoteModule,
     WebhookModule,
     UserModule,
     AuthModule,

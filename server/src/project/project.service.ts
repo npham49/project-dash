@@ -36,6 +36,7 @@ export class ProjectService {
       orderBy,
       include: {
         user: true,
+        note: true,
       },
     });
   }

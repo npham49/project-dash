@@ -1,11 +1,7 @@
 import { Project } from "@/typings/project";
+import { JSONContent } from "novel";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
-
-export const getPosts = async () => {
-  const response = await fetch(`${apiUrl}/posts`);
-  return response.json();
-};
 
 export const createProject = async (
   project: Partial<Project>,
@@ -63,15 +59,6 @@ export const updateProject = async (
   return response.json();
 };
 
-export const getUser = async (token: string) => {
-  const response = await fetch(`${apiUrl}/user`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.json();
-};
-
 export const updateProjects = async (
   projects: Partial<Project>[],
   token: string
@@ -100,4 +87,55 @@ export const updateProjects = async (
     console.error("Error updating projects:", error);
     throw error;
   }
+};
+
+export const getUser = async (token: string) => {
+  const response = await fetch(`${apiUrl}/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+};
+
+export const getNote = async (token: string, projectId: string) => {
+  console.log("token", token);
+  const response = await fetch(`${apiUrl}/note/${projectId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+};
+
+export const createNote = async (
+  token: string,
+  projectId: string,
+  content: JSONContent
+) => {
+  const response = await fetch(`${apiUrl}/note/${projectId}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content }),
+  });
+  return response.json();
+};
+
+export const updateNote = async (
+  token: string,
+  projectId: string,
+  content: JSONContent
+) => {
+  const response = await fetch(`${apiUrl}/note/${projectId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content }),
+  });
+  return response.json();
 };

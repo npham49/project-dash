@@ -5,7 +5,6 @@ import Board from "./_components/board";
 import { useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/store/user-store-provider";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import BoardSkeleton from "./_components/skeleton";
 
 export default function Page() {

@@ -11,6 +11,7 @@ export interface Project {
   interest: "low" | "medium" | "high";
   labels: Option[];
   columnIndex: number;
+  note: any | null;
 }
 
 // Define the structure of a column
@@ -21,6 +22,7 @@ export interface Column {
 }
 
 export const projectSchema = z.object({
+  id: z.string().optional(),
   title: z.string().min(2).max(50),
   description: z.string().min(2).max(500),
   interest: z.enum(["low", "medium", "high"]).default("medium"),
